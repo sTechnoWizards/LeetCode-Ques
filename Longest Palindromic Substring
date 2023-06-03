@@ -1,23 +1,80 @@
-Question
-<br>
-Longest Palindromic Substring
-<br>Medium
-<br>
+5.Longest Palindromic Substring
+
+Problem statement:
 Given a string s, return the longest palindromic substring in s.
-<br>
- <br>
+
 Example 1:
-<br>
 Input: s = "babad"
 Output: "bab"
 Explanation: "aba" is also a valid answer. <br><br>
+
 Example 2:
-<br>
 Input: s = "cbbd"
 Output: "bb"
- <br>
-<br>
+
 Constraints:
-<br>
+
 1 <= s.length <= 1000<br>
 s consist of only digits and English letters.
+
+
+-----------------------------Solution--------------------------------------------------------
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        int n = s.size();
+        if (n == 0)
+            return "";
+        if (n == 1)
+            return s;
+        int minstart = 0, maxlen = 0;
+        for (int i = 0; i < n; ) {
+            if (n - i < maxlen / 2)
+                break;
+            
+            int l = i, r = i;
+            
+            // Find the center of the palindrome
+            while (r < n && s[r] == s[r + 1])
+                r++;
+            
+            // Update the next starting point
+            i = r + 1;
+            
+            // Expand around the center to find the longest palindrome
+            while (l > 0 && r < n && s[l - 1] == s[r + 1]) {
+                l--;
+                r++;
+            }
+            
+            int newlen = r - l + 1;
+            if (newlen > maxlen) {
+                maxlen = newlen;
+                minstart = l;
+            }
+        }
+        
+        return s.substr(minstart, maxlen);
+    }
+};
+--------------------------------Approach--------------------------------------------------
+The given code aims to find the longest palindrome in a given string. 
+It uses a two-pointer approach to expand around each center and checks if the characters on both sides are equal. 
+The variable minstart keeps track of the starting index of the longest palindrome found so far, and maxlen stores its length.
+
+Approach:
+# Initialize variables minstart and maxlen as 0 to keep track of the longest palindrome found so far.
+# Iterate over each character in the string using a variable i.
+# Check if the remaining length from i to the end of the string is less than half of the maxlen. If it is, there is no possibility of finding a longer palindrome, so we break out of the loop.
+# Set l and r as i, representing the left and right pointers of the potential palindrome.
+# While r is within the string bounds and the character at r is equal to the next character, increment r.
+# Update i to be r + 1 since all the characters from l to r have been accounted for.
+# While l is greater than 0 and r is within the string bounds, and the characters at l-1 and r+1 are equal, decrement l and increment r.
+# Calculate the length of the potential palindrome using newlen = r - l + 1.
+# If newlen is greater than maxlen, update maxlen with newlen and minstart with l.
+# After the loop finishes, return the substring of s starting from minstart with length maxlen, which represents the longest palindrome found in the string.
+
+
+Complexity:
+Time Complexity: The code uses a two-pointer approach to expand around each center, resulting in a linear time complexity of O(n), where n is the length of the string.
+Space Complexity: The code uses a constant amount of extra space, resulting in a space complexity of O(1).
